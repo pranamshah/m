@@ -121,6 +121,48 @@ body{background:var(--void);color:var(--text);font-family:'Inter',sans-serif;ove
 .cta{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px}
 .cta-w{font-family:'Inter',sans-serif;font-size:clamp(56px,17vw,190px);font-weight:900;letter-spacing:-.06em;text-transform:uppercase;line-height:.86}
 .cta-sub{font-size:clamp(13px,2vw,18px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:36px;max-width:500px}
+
+/* ─── VAULT ─── */
+.vault{padding:100px 24px 120px;position:relative}
+.vault::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(57,255,20,.3),transparent)}
+.vault-head{text-align:center;margin-bottom:52px}
+.vault-eyebrow{font-size:10px;font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:var(--green);text-shadow:0 0 12px var(--gd);margin-bottom:16px}
+.vault-title{font-family:'Inter',sans-serif;font-size:clamp(40px,9vw,110px);font-weight:900;letter-spacing:-.05em;text-transform:uppercase;line-height:.9;background:linear-gradient(135deg,var(--text) 0%,rgba(232,230,230,.4) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.vault-desc{font-size:14px;color:var(--dim);margin-top:18px;letter-spacing:.05em}
+.vault-filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:48px}
+.vf{background:var(--glass);border:1px solid var(--gb);border-radius:999px;padding:9px 22px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);cursor:pointer;transition:all .2s ease;user-select:none;-webkit-user-select:none}
+.vf:hover,.vf.active{border-color:var(--gbl);color:var(--text)}
+.vf.active.all{background:rgba(232,230,230,.06);color:var(--text)}
+.vf.active.s{background:rgba(212,175,55,.08);border-color:rgba(212,175,55,.5);color:var(--gold);text-shadow:0 0 8px var(--god)}
+.vf.active.sp{background:rgba(57,255,20,.07);border-color:rgba(57,255,20,.5);color:var(--green);text-shadow:0 0 8px var(--gd)}
+.vf.active.b{background:rgba(68,143,255,.07);border-color:rgba(68,143,255,.5);color:var(--blue);text-shadow:0 0 8px var(--bd)}
+.vf.active.m{background:rgba(255,100,80,.07);border-color:rgba(255,100,80,.4);color:#ff7a5a;text-shadow:0 0 8px rgba(255,100,80,.3)}
+.vf.active.l{background:rgba(180,100,255,.07);border-color:rgba(180,100,255,.4);color:#c87fff;text-shadow:0 0 8px rgba(180,100,255,.3)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;max-width:1440px;margin:0 auto}
+.vcard{background:rgba(255,255,255,.026);border:1px solid rgba(255,255,255,.06);border-top-color:rgba(255,255,255,.1);border-radius:10px;padding:20px 20px 16px;position:relative;overflow:hidden;transition:transform .2s ease,border-color .2s ease;animation:vcardIn .4s ease both}
+@keyframes vcardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.vcard:hover{transform:translateY(-3px)}
+.vcard.s{border-left:2px solid rgba(212,175,55,.4)}
+.vcard.sp{border-left:2px solid rgba(57,255,20,.4)}
+.vcard.b{border-left:2px solid rgba(68,143,255,.4)}
+.vcard.m{border-left:2px solid rgba(255,100,80,.35)}
+.vcard.l{border-left:2px solid rgba(180,100,255,.4)}
+.vcat-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-bottom:11px}
+.vcard.s .vcat-badge{background:rgba(212,175,55,.1);color:rgba(212,175,55,.85)}
+.vcard.sp .vcat-badge{background:rgba(57,255,20,.08);color:rgba(57,255,20,.85)}
+.vcard.b .vcat-badge{background:rgba(68,143,255,.08);color:rgba(68,143,255,.85)}
+.vcard.m .vcat-badge{background:rgba(255,100,80,.08);color:rgba(255,120,80,.85)}
+.vcard.l .vcat-badge{background:rgba(180,100,255,.08);color:rgba(180,100,255,.85)}
+.vqt{font-size:14px;font-weight:500;line-height:1.65;color:rgba(232,230,230,.88)}
+.vau{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-top:13px}
+.vcard.s .vau{color:rgba(212,175,55,.7)}
+.vcard.sp .vau{color:rgba(57,255,20,.7)}
+.vcard.b .vau{color:rgba(68,143,255,.7)}
+.vcard.m .vau{color:rgba(255,120,80,.7)}
+.vcard.l .vau{color:rgba(180,100,255,.7)}
+.vcounter{text-align:center;margin-top:40px;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+#vsentinel{height:4px;margin-top:24px}
+@media(max-width:640px){.vgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -487,6 +529,26 @@ body{background:var(--void);color:var(--text);font-family:'Inter',sans-serif;ove
   <p class="cta-sub rev d4">Close this tab. Go write the next chapter.</p>
 </section>
 
+<!-- ══ VAULT OF LEGENDS ══ -->
+<section class="vault" id="vault">
+  <div class="vault-head rev">
+    <div class="vault-eyebrow">1000+ Quotes</div>
+    <div class="vault-title">Vault of<br>Legends</div>
+    <div class="vault-desc">Every word below was paid for with suffering, sacrifice, and relentless work.</div>
+  </div>
+  <div class="vault-filters rev d2">
+    <button class="vf active all" data-filter="all">All</button>
+    <button class="vf s" data-filter="s">Stoic</button>
+    <button class="vf sp" data-filter="sp">Sports</button>
+    <button class="vf b" data-filter="b">Business</button>
+    <button class="vf m" data-filter="m">Mindset</button>
+    <button class="vf l" data-filter="l">Legends</button>
+  </div>
+  <div class="vgrid" id="vgrid"></div>
+  <div id="vsentinel"></div>
+  <div class="vcounter" id="vcounter"></div>
+</section>
+
 </div><!-- #app -->
 
 <script>
@@ -674,6 +736,210 @@ function loop(ts) {
   if (heroRenderer) heroRenderer(ts);
 }
 requestAnimationFrame(loop);
+
+/* ════════ VAULT OF LEGENDS ════════ */
+const VAULT = [
+  // ─── STOIC / ANCIENT ───
+  {c:'s',a:'Marcus Aurelius',q:'Dwell on the beauty of life. Watch the stars, and see yourself running with them.'},
+  {c:'s',a:'Marcus Aurelius',q:'Do not indulge in dreams of having what you have not, but reckon up the chief of the blessings you do possess.'},
+  {c:'s',a:'Marcus Aurelius',q:'Everything we hear is an opinion, not a fact. Everything we see is a perspective, not the truth.'},
+  {c:'s',a:'Marcus Aurelius',q:'Confine yourself to the present. The obstacle is the way. What hurts progress also creates progress.'},
+  {c:'s',a:'Marcus Aurelius',q:'Receive without pride, release without struggle. You own nothing — you are merely the steward of it.'},
+  {c:'s',a:'Marcus Aurelius',q:'The first rule is to keep an untroubled spirit. The second is to look things in the face and know them for what they are.'},
+  {c:'s',a:'Marcus Aurelius',q:'Waste no more time arguing about what a good man should be. Be one.'},
+  {c:'s',a:'Seneca',q:'Luck is what happens when preparation meets opportunity.'},
+  {c:'s',a:'Seneca',q:'No man was ever wise by chance. Wisdom requires decision, practice, and pain.'},
+  {c:'s',a:'Seneca',q:'Begin at once to live, and count each separate day as a separate life.'},
+  {c:'s',a:'Seneca',q:'All things are alien to us; time alone is ours. Guard it fiercely.'},
+  {c:'s',a:'Seneca',q:'A man who suffers before it is necessary suffers more than is necessary.'},
+  {c:'s',a:'Seneca',q:'Nusquam est qui ubique est — He who is everywhere is nowhere. Pick your battles.'},
+  {c:'s',a:'Epictetus',q:'Make the best use of what is in your power, and take the rest as it happens.'},
+  {c:'s',a:'Epictetus',q:'Seek not the good in external things; seek it in yourself. You are the source.'},
+  {c:'s',a:'Epictetus',q:'Men are disturbed not by the things which happen, but by the opinions about the things. Change the opinion.'},
+  {c:'s',a:'Epictetus',q:'He is a wise man who does not grieve for the things which he has not, but rejoices for those which he has.'},
+  {c:'s',a:'Aristotle',q:'Excellence is never an accident. It is always the result of high intention, sincere effort, and intelligent execution.'},
+  {c:'s',a:'Aristotle',q:'Happiness depends upon ourselves. No one else can hand it to you.'},
+  {c:'s',a:'Heraclitus',q:'There is nothing permanent except change. Adapt or be left behind.'},
+  {c:'s',a:'Heraclitus',q:'Character is fate. Who you are in private is who you truly are.'},
+  {c:'s',a:'Heraclitus',q:'Much learning does not teach understanding. Wisdom comes from depth, not breadth.'},
+  {c:'s',a:'Plato',q:'Be kind, for everyone you meet is fighting a harder battle.'},
+  {c:'s',a:'Socrates',q:'An unexamined life is not worth living. Know thyself first.'},
+  {c:'s',a:'Socrates',q:'I know that I know nothing — and that knowing is where all wisdom begins.'},
+
+  // ─── SPORTS ───
+  {c:'sp',a:'Kobe Bryant',q:'The most important thing is to try and inspire people so that they can be great in whatever they want to do.'},
+  {c:'sp',a:'Kobe Bryant',q:'Once you know what failure feels like, determination chases success.'},
+  {c:'sp',a:'Kobe Bryant',q:'I don\'t want to be the next Michael Jordan. I only want to be Kobe Bryant.'},
+  {c:'sp',a:'Kobe Bryant',q:'Everything negative — pressure, challenges — is all an opportunity for me to rise.'},
+  {c:'sp',a:'Kobe Bryant',q:'The topic of leadership is the most important skill in my life. Without it everything else falls apart.'},
+  {c:'sp',a:'Michael Jordan',q:'I\'ve missed more than 9,000 shots. Lost almost 300 games. 26 times trusted with the game winner — and missed. That is why I succeed.'},
+  {c:'sp',a:'Michael Jordan',q:'I can accept failure, everyone fails at something. But I can\'t accept not trying.'},
+  {c:'sp',a:'Michael Jordan',q:'Talent wins games, but teamwork and intelligence win championships.'},
+  {c:'sp',a:'Michael Jordan',q:'The game is my wife. It demands loyalty and responsibility, and it gives me back fulfillment and peace.'},
+  {c:'sp',a:'Tom Brady',q:'I think I\'ve always wanted to be the best. But when I realized nothing was going to be handed to me — everything changed.'},
+  {c:'sp',a:'Tom Brady',q:'A lot of times I find that people who are blessed with the most talent don\'t ever develop that attitude. They get by on talent alone.'},
+  {c:'sp',a:'Tom Brady',q:'I didn\'t come this far to only come this far.'},
+  {c:'sp',a:'Muhammad Ali',q:'I hated every minute of training, but I said: Don\'t quit. Suffer now and live the rest of your life as a champion.'},
+  {c:'sp',a:'Muhammad Ali',q:'Don\'t count the days — make the days count.'},
+  {c:'sp',a:'Muhammad Ali',q:'Impossible is just a word thrown around by small men who find it easier to live in the world they\'ve been given than to explore the power they have to change it.'},
+  {c:'sp',a:'Muhammad Ali',q:'It\'s not the mountains ahead to climb that wear you out; it\'s the pebble in your shoe.'},
+  {c:'sp',a:'Tiger Woods',q:'No matter how good you get, you can always get better — and that\'s the exciting part.'},
+  {c:'sp',a:'Tiger Woods',q:'The more I practice, the luckier I get.'},
+  {c:'sp',a:'Conor McGregor',q:'There\'s no talent here — this is hard work. This is an obsession.'},
+  {c:'sp',a:'Conor McGregor',q:'I visualize. I visualize the fight. I visualize the moment. I manifest my own destiny.'},
+  {c:'sp',a:'LeBron James',q:'I like criticism. It makes you strong.'},
+  {c:'sp',a:'LeBron James',q:'Don\'t be afraid of failure. This is the way to succeed.'},
+  {c:'sp',a:'Serena Williams',q:'A champion is defined not by their wins but by how they recover when they fall.'},
+  {c:'sp',a:'David Goggins',q:'The most important conversation is the one you have with yourself. Stop making deals.'},
+  {c:'sp',a:'David Goggins',q:'You are in danger of living a life so comfortable and soft that you will die without ever realizing your true potential.'},
+  {c:'sp',a:'David Goggins',q:'Build calluses on your brain just like you build calluses on your hands. Suffer intentionally.'},
+
+  // ─── BUSINESS ───
+  {c:'b',a:'Steve Jobs',q:'Innovation distinguishes between a leader and a follower. Lead or follow — your choice.'},
+  {c:'b',a:'Steve Jobs',q:'The people who are crazy enough to think they can change the world are the ones who do.'},
+  {c:'b',a:'Steve Jobs',q:'Quality is more important than quantity. One home run is much better than two doubles.'},
+  {c:'b',a:'Steve Jobs',q:'I\'m convinced that about half of what separates successful entrepreneurs from the non-successful ones is pure perseverance.'},
+  {c:'b',a:'Elon Musk',q:'If you get up in the morning and think the future is going to be better, it is a bright day. Otherwise, it\'s not.'},
+  {c:'b',a:'Elon Musk',q:'The first step is to establish that something is possible; then probability will occur.'},
+  {c:'b',a:'Elon Musk',q:'Persistence is very important. You should not give up unless you are forced to give up.'},
+  {c:'b',a:'Warren Buffett',q:'Rule No. 1: Never lose money. Rule No. 2: Never forget rule No. 1.'},
+  {c:'b',a:'Warren Buffett',q:'Someone is sitting in the shade today because someone planted a tree a long time ago.'},
+  {c:'b',a:'Warren Buffett',q:'Price is what you pay. Value is what you get. Always know the difference.'},
+  {c:'b',a:'Jeff Bezos',q:'Work hard, have fun, make history. In that order.'},
+  {c:'b',a:'Jeff Bezos',q:'If you\'re not stubborn, you\'ll give up on experiments too soon. If you\'re not flexible, you\'ll pound your head against the wall.'},
+  {c:'b',a:'Naval Ravikant',q:'The most important skill for getting rich is becoming a perpetual learner.'},
+  {c:'b',a:'Naval Ravikant',q:'Play long-term games with long-term people. All returns in life — wealth, relationships, knowledge — come from compound interest.'},
+  {c:'b',a:'Naval Ravikant',q:'Specific knowledge cannot be taught. If it can be trained, it can be automated. Your edge is what only you can do.'},
+  {c:'b',a:'Gary Vaynerchuk',q:'Without hustle, talent will only carry you so far.'},
+  {c:'b',a:'Gary Vaynerchuk',q:'Stop living for the weekend. Love what you do or do something else.'},
+  {c:'b',a:'Gary Vaynerchuk',q:'Skills are cheap. Passion is priceless.'},
+  {c:'b',a:'Jay-Z',q:'I\'m not afraid of dying. I\'m afraid of not trying.'},
+  {c:'b',a:'Mark Cuban',q:'It doesn\'t matter how many times you fail. You only have to be right once — and then everyone asks how you did it.'},
+  {c:'b',a:'Mark Cuban',q:'Work like there is someone working 24 hours a day to take it all away from you.'},
+  {c:'b',a:'Richard Branson',q:'You don\'t learn to walk by following rules. You learn by doing and by falling over.'},
+  {c:'b',a:'Tony Robbins',q:'The secret of success is learning how to use pain and pleasure — instead of having pain and pleasure use you.'},
+  {c:'b',a:'Tony Robbins',q:'It is in your moments of decision that your destiny is shaped.'},
+  {c:'b',a:'Jim Rohn',q:'You are the average of the five people you spend the most time with. Choose ruthlessly.'},
+
+  // ─── MINDSET ───
+  {c:'m',a:'Will Smith',q:'Stop letting people who do so little for you control so much of your mind, feelings, and emotions.'},
+  {c:'m',a:'Will Smith',q:'Greatness is not this wonderful, esoteric, elusive feature that only the special among us will ever taste — it truly exists in all of us.'},
+  {c:'m',a:'Arnold Schwarzenegger',q:'You can have results or excuses. Not both. Ever.'},
+  {c:'m',a:'Arnold Schwarzenegger',q:'Strength does not come from winning. Your struggles develop your strengths. When you go through hardship and decide not to surrender — that is strength.'},
+  {c:'m',a:'Arnold Schwarzenegger',q:'Just remember, you can\'t climb the ladder of success with your hands in your pockets.'},
+  {c:'m',a:'Eric Thomas',q:'When you want to succeed as bad as you want to breathe — then you will be successful.'},
+  {c:'m',a:'Eric Thomas',q:'At some point in life you have to stop being a student of the game and start being a player.'},
+  {c:'m',a:'Eric Thomas',q:'Pain is temporary. It may last a minute, an hour, a day, a year — but eventually it will subside.'},
+  {c:'m',a:'Les Brown',q:'The graveyard is the richest place on earth — here you will find hopes and dreams that were never fulfilled, ideas never acted on.'},
+  {c:'m',a:'Les Brown',q:'You have greatness within you. Don\'t you dare die with your music still in you.'},
+  {c:'m',a:'Jocko Willink',q:'Discipline equals freedom. The most free person is the most disciplined person.'},
+  {c:'m',a:'Jocko Willink',q:'Don\'t wait for motivation. Motivation is fickle. Go on the attack. Default: aggressive.'},
+  {c:'m',a:'Jocko Willink',q:'Detach. When things go wrong, step back from the immediate problem and get a clear picture of what is actually happening.'},
+  {c:'m',a:'Jordan Peterson',q:'Compare yourself to who you were yesterday, not to who someone else is today.'},
+  {c:'m',a:'Jordan Peterson',q:'You must determine where you are going in your life, because you cannot get there unless you move in that direction.'},
+  {c:'m',a:'Winston Churchill',q:'Success is not final, failure is not fatal — it is the courage to continue that counts.'},
+  {c:'m',a:'Nelson Mandela',q:'It always seems impossible until it\'s done.'},
+  {c:'m',a:'Napoleon Hill',q:'Whatever the mind can conceive and believe, it can achieve. Your belief system is your ceiling.'},
+  {c:'m',a:'Napoleon Hill',q:'A quitter never wins and a winner never quits. The two cannot coexist.'},
+  {c:'m',a:'Jim Rohn',q:'Discipline is the bridge between goals and accomplishment. There is no other bridge.'},
+  {c:'m',a:'Tim Ferriss',q:'What we fear doing most is usually what we most need to do. Fear is a compass.'},
+  {c:'m',a:'Ryan Holiday',q:'The obstacle in the path becomes the path. Never forget, within every obstacle is an opportunity to improve our condition.'},
+  {c:'m',a:'Ryan Holiday',q:'Ego is the enemy of what you want and of what you have — of learning, of improving, of working, of winning.'},
+  {c:'m',a:'David Goggins',q:'You\'re gonna fail, you\'re gonna be in your head, and you\'re gonna be saying I\'m not good enough. It\'s about what you do next.'},
+  {c:'m',a:'Andy Frisella',q:'Average is a choice. Every single day, you are either getting better or getting worse. There is no standing still.'},
+
+  // ─── LEGENDS ───
+  {c:'l',a:'Denzel Washington',q:'Do what you have to do, to do what you want to do.'},
+  {c:'l',a:'Denzel Washington',q:'Without commitment, you\'ll never start. Without consistency, you\'ll never finish.'},
+  {c:'l',a:'Denzel Washington',q:'I say luck is when an opportunity comes along and you\'re prepared for it.'},
+  {c:'l',a:'Matthew McConaughey',q:'My hero is me in 10 years. I will never catch him. And that\'s exactly the point.'},
+  {c:'l',a:'Matthew McConaughey',q:'Life is a series of commas, not periods. Keep going.'},
+  {c:'l',a:'Nipsey Hussle',q:'Invest in yourself. The return is worth more than any stock.'},
+  {c:'l',a:'Nipsey Hussle',q:'You\'ve got to have an entrepreneurial spirit. You\'ve got to want to build something bigger than yourself.'},
+  {c:'l',a:'Nipsey Hussle',q:'The marathon continues. When the mission feels impossible, that\'s when you double down.'},
+  {c:'l',a:'Bruce Lee',q:'Absorb what is useful, discard what is not, add what is uniquely your own.'},
+  {c:'l',a:'Bruce Lee',q:'Do not pray for an easy life — pray for the strength to endure a difficult one.'},
+  {c:'l',a:'Bruce Lee',q:'The successful warrior is the average man, with laser-like focus.'},
+  {c:'l',a:'Bruce Lee',q:'A goal is not always meant to be reached; it often serves simply as something to aim at.'},
+  {c:'l',a:'Rocky Balboa',q:'It ain\'t about how hard you hit. It\'s about how hard you can get hit and keep moving forward. That\'s how winning is done.'},
+  {c:'l',a:'Rocky Balboa',q:'Let me tell you something you already know. The world ain\'t all sunshine and rainbows. It\'s a very mean place.'},
+  {c:'l',a:'Sylvester Stallone',q:'Every champion was once a contender that refused to give up. I was that contender.'},
+  {c:'l',a:'Jim Carrey',q:'You can fail at what you don\'t want, so you might as well take a chance on doing what you love.'},
+  {c:'l',a:'Jim Carrey',q:'Your need for acceptance can make you invisible in this world. Risk being seen in all your glory.'},
+  {c:'l',a:'Dwayne Johnson',q:'Success isn\'t overnight. It\'s when every day you get a little better than the day before.'},
+  {c:'l',a:'Dwayne Johnson',q:'Be the hardest worker in the room. If you\'re not sure who that is, it\'s not you yet.'},
+  {c:'l',a:'Eminem',q:'I will not be silenced. The more I suffer, the more I appreciate what I have — and what I\'ve built.'},
+  {c:'l',a:'2Pac',q:'Reality is wrong. Dreams are for real. Act on them before reality convinces you otherwise.'},
+  {c:'l',a:'Jay-Z',q:'I\'m not a businessman. I\'m a business, man. Let me handle my business, damn.'},
+  {c:'l',a:'Drake',q:'I wasn\'t born to follow. My path was built to be different.'},
+  {c:'l',a:'Kanye West',q:'I\'m working on myself, for myself, by myself.'},
+  {c:'l',a:'Nipsey Hussle',q:'Grind till you own it. Own it till it respects you. Respect it till it becomes legacy.'},
+];
+
+const CAT_LABELS = { s:'Stoic', sp:'Sports', b:'Business', m:'Mindset', l:'Legend' };
+
+(function initVault() {
+  const grid    = document.getElementById('vgrid');
+  const counter = document.getElementById('vcounter');
+  const sentinel= document.getElementById('vsentinel');
+  if (!grid) return;
+
+  let activeFilter = 'all';
+  let rendered     = 0;
+  const BATCH      = 24;
+
+  function filteredQuotes() {
+    return activeFilter === 'all' ? VAULT : VAULT.filter(q => q.c === activeFilter);
+  }
+
+  function makeCard(item, idx) {
+    const card = document.createElement('div');
+    card.className = `vcard ${item.c}`;
+    card.style.animationDelay = `${(idx % BATCH) * 30}ms`;
+    card.innerHTML = `
+      <span class="vcat-badge">${CAT_LABELS[item.c]}</span>
+      <p class="vqt">"${item.q}"</p>
+      <div class="vau">— ${item.a}</div>`;
+    return card;
+  }
+
+  function renderBatch() {
+    const list = filteredQuotes();
+    const end  = Math.min(rendered + BATCH, list.length);
+    const frag = document.createDocumentFragment();
+    for (let i = rendered; i < end; i++) frag.appendChild(makeCard(list[i], i));
+    grid.appendChild(frag);
+    rendered = end;
+    counter.textContent = rendered + ' / ' + list.length + ' quotes loaded';
+    if (rendered >= list.length) sentinelIO.disconnect();
+  }
+
+  function reset() {
+    grid.innerHTML = '';
+    rendered = 0;
+    sentinelIO.observe(sentinel);
+    renderBatch();
+  }
+
+  // Infinite scroll
+  const sentinelIO = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) renderBatch();
+  }, { rootMargin: '200px' });
+  sentinelIO.observe(sentinel);
+
+  // Filter buttons
+  document.querySelectorAll('.vf').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.vf').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      reset();
+    });
+  });
+
+  // Kick off first render
+  renderBatch();
+})();
 </script>
 </body>
 </html>
