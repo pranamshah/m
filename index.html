@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONQUER YOUR MIND</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,800;0,900;1,900&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --void:#050507;
+  --surface:#0d0d10;
+  --green:#39FF14;
+  --green-d:rgba(57,255,20,0.35);
+  --blue:#448fff;
+  --blue-d:rgba(68,143,255,0.25);
+  --gold:#D4AF37;
+  --gold-d:rgba(212,175,55,0.3);
+  --text:#e8e6e6;
+  --text-dim:rgba(232,230,230,0.45);
+  --glass:rgba(255,255,255,0.035);
+  --gb:rgba(255,255,255,0.07);
+  --gb-l:rgba(255,255,255,0.14);
+}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* ─── FIXED BG LAYERS ─── */
+#wgl{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#tj{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#col-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;transition:background 2s ease}
+
+/* ─── APP ─── */
+#app{position:relative;z-index:10}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--void)}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:9px}
+
+/* ─── HERO ─── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
+#hero3d{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-inner{position:relative;z-index:2;max-width:920px}
+.htag{font-size:10px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--green);text-shadow:0 0 18px var(--green-d);margin-bottom:28px}
+.hquote{font-family:'Playfair Display',serif;font-size:clamp(30px,5.5vw,68px);font-weight:900;font-style:italic;line-height:1.18;letter-spacing:-.02em;color:var(--text);margin-bottom:28px}
+.hauth{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim)}
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:32px}
+.chip{background:var(--glass);border:1px solid var(--gb);border-radius:999px;padding:7px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--green);text-shadow:0 0 8px var(--green-d)}
+.scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px}
+.sh-text{font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim)}
+.sh-line{width:1px;height:44px;background:linear-gradient(to bottom,transparent,var(--green));animation:sh 2s infinite ease-in-out}
+@keyframes sh{0%,100%{opacity:.3;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1.1)}}
+
+/* ─── SECTION BASE ─── */
+.sec{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 24px;position:relative;overflow:hidden}
+
+/* ─── ANCIENT ─── */
+.sec-anc{background:radial-gradient(ellipse at 30% 20%,rgba(180,140,60,.07) 0%,transparent 55%),radial-gradient(ellipse at 70% 80%,rgba(120,80,30,.06) 0%,transparent 55%)}
+.sec-anc::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 44px,rgba(180,140,60,.015) 44px,rgba(180,140,60,.015) 45px),repeating-linear-gradient(0deg,transparent,transparent 44px,rgba(180,140,60,.015) 44px,rgba(180,140,60,.015) 45px);pointer-events:none}
+.alabel{font-size:10px;font-weight:700;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);text-shadow:0 0 12px var(--gold-d);margin-bottom:20px;text-align:center}
+.aquote{font-family:'Playfair Display',serif;font-size:clamp(22px,3.8vw,52px);font-weight:700;font-style:italic;line-height:1.28;letter-spacing:-.01em;color:rgba(242,222,178,.96);text-shadow:0 2px 24px rgba(180,140,60,.25);max-width:820px;text-align:center}
+.aauth{font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(180,140,60,.65);margin-top:24px;text-align:center}
+.anc-col{position:absolute;opacity:.035;font-family:'Playfair Display',serif;font-size:220px;color:var(--gold);pointer-events:none;user-select:none}
+.anc-col-l{left:-30px;top:50%;transform:translateY(-50%);animation:sway 10s infinite ease-in-out}
+.anc-col-r{right:-30px;top:50%;transform:translateY(-50%) scaleX(-1);animation:sway 10s 1s infinite ease-in-out reverse}
+@keyframes sway{0%,100%{transform:translateY(-50%) rotate(-1.5deg)}50%{transform:translateY(-50%) rotate(1.5deg)}}
+
+/* Floating ancient marble orbs */
+.anc-orb{position:absolute;border-radius:50%;pointer-events:none;animation:float-orb 12s infinite ease-in-out}
+@keyframes float-orb{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+/* ─── CYBER ─── */
+.sec-cyber{background:radial-gradient(ellipse at 20% 50%,rgba(57,255,20,.025) 0%,transparent 60%),radial-gradient(ellipse at 80% 50%,rgba(68,143,255,.025) 0%,transparent 60%)}
+.clabel{font-size:10px;font-weight:700;letter-spacing:.38em;text-transform:uppercase;color:var(--green);text-shadow:0 0 10px var(--green-d);margin-bottom:20px;text-align:center}
+.cquote{font-family:'Inter',sans-serif;font-size:clamp(20px,3.5vw,50px);font-weight:900;line-height:1.22;letter-spacing:-.025em;color:var(--text);max-width:820px;text-align:center}
+.cquote .hl{color:var(--green);text-shadow:0 0 22px var(--green-d)}
+.cquote .hlb{color:var(--blue);text-shadow:0 0 22px var(--blue-d)}
+.cauth{font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--green);opacity:.7;margin-top:22px;text-align:center}
+
+/* ─── KINETIC ─── */
+.sec-kin{min-height:70vh;background:transparent;overflow:hidden}
+.kword{font-family:'Inter',sans-serif;font-size:clamp(52px,16vw,190px);font-weight:900;line-height:.88;letter-spacing:-.05em;text-transform:uppercase;background:linear-gradient(135deg,var(--green) 0%,rgba(57,255,20,.25) 60%,transparent 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;filter:drop-shadow(0 0 40px var(--green-d))}
+.kword-gold{background:linear-gradient(135deg,var(--gold) 0%,rgba(212,175,55,.25) 60%,transparent 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 40px var(--gold-d))}
+
+/* ─── VIDEO ─── */
+.sec-vid{padding:60px 24px;min-height:auto}
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;max-width:1200px;width:100%}
+.vid-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--gb);border-top-color:var(--gb-l);border-left-color:var(--gb-l);border-radius:12px;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease}
+.vid-card:hover{transform:translateY(-5px);box-shadow:0 24px 48px rgba(0,0,0,.6),0 0 24px var(--green-d)}
+.vid-embed{width:100%;aspect-ratio:16/9;border:none;display:block}
+.vid-info{padding:16px}
+.vid-person{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--green);text-shadow:0 0 8px var(--green-d)}
+.vid-title{font-size:15px;font-weight:700;color:var(--text);margin-top:5px}
+.vid-desc{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.55}
+
+/* ─── TRIO ─── */
+.trio{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;max-width:1100px;width:100%}
+.tcard{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--gb);border-top-color:var(--gb-l);border-left-color:var(--gb-l);border-radius:12px;padding:26px;position:relative;overflow:hidden}
+.tcard::before{content:'"';position:absolute;top:-8px;left:14px;font-family:'Playfair Display',serif;font-size:110px;color:rgba(57,255,20,.04);line-height:1;pointer-events:none}
+.tcard.anc::before{color:rgba(212,175,55,.06)}
+.tcard.anc{border-color:rgba(180,140,60,.18);border-top-color:rgba(180,140,60,.3)}
+.tq{font-size:15px;font-weight:500;line-height:1.65;color:var(--text);position:relative;z-index:1}
+.ta{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--green);opacity:.8;margin-top:14px}
+.tcard.anc .ta{color:var(--gold)}
+
+/* ─── DIVIDER ─── */
+.catdiv{min-height:22vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.divtxt{font-family:'Inter',sans-serif;font-size:clamp(44px,13vw,150px);font-weight:900;letter-spacing:-.04em;text-transform:uppercase;color:rgba(255,255,255,.018);-webkit-text-stroke:1px rgba(255,255,255,.055);white-space:nowrap;animation:slide-div 30s linear infinite}
+@keyframes slide-div{0%{transform:translateX(5%)}100%{transform:translateX(-5%)}}
+
+/* ─── SPLIT ─── */
+.split{display:flex;gap:44px;max-width:1100px;width:100%;align-items:center;flex-wrap:wrap}
+.split-q{flex:1;min-width:280px}
+.split-vis{flex:1;min-width:240px;position:relative}
+.ancient-svg-wrap{width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;position:relative}
+
+/* ─── FULL QUOTE (large center) ─── */
+.sec-full{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:80px 24px}
+.fquote{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,64px);font-weight:900;font-style:italic;line-height:1.2;letter-spacing:-.02em;color:rgba(242,222,178,.95);text-shadow:0 0 60px rgba(212,175,55,.15);max-width:900px}
+.fquote-modern{font-family:'Inter',sans-serif;font-size:clamp(26px,4.5vw,58px);font-weight:900;line-height:1.22;letter-spacing:-.03em;color:var(--text);text-shadow:0 0 40px rgba(57,255,20,.07);max-width:900px}
+
+/* ─── REVEAL ─── */
+.rev{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.rev.on{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.35s}.d4{transition-delay:.5s}
+
+/* ─── GLOW PULSE ─── */
+@keyframes gp{0%,100%{text-shadow:0 0 20px var(--green-d),0 0 40px rgba(57,255,20,.15)}50%{text-shadow:0 0 40px var(--green-d),0 0 80px rgba(57,255,20,.25)}}
+@keyframes goldp{0%,100%{text-shadow:0 0 20px var(--gold-d),0 0 40px rgba(212,175,55,.1)}50%{text-shadow:0 0 40px var(--gold-d),0 0 80px rgba(212,175,55,.2)}}
+
+/* ─── FIRE TEXT ─── */
+.fire{animation:goldp 3s infinite ease-in-out}
+.glow{animation:gp 3s infinite ease-in-out}
+
+/* ─── FINAL CTA ─── */
+.cta-section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 24px;position:relative}
+.cta-word{font-family:'Inter',sans-serif;font-size:clamp(60px,18vw,200px);font-weight:900;letter-spacing:-.06em;text-transform:uppercase;background:linear-gradient(135deg,var(--green),rgba(57,255,20,.1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 60px var(--green-d));line-height:.85}
+.cta-sub{font-size:clamp(14px,2.5vw,22px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-top:32px}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:640px){
+  .split{flex-direction:column}
+  .split-vis{display:none}
+  .trio{grid-template-columns:1fr}
+  .vid-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<canvas id="wgl"></canvas>
+<div id="tj"></div>
+<div id="col-overlay"></div>
+
+<div id="app">
+
+<!-- ═══════════════════ SECTION 1: HERO ═══════════════════ -->
+<section class="hero" data-theme="ancient">
+  <div id="hero3d"></div>
+  <div class="hero-inner">
+    <div class="htag rev">Marcus Aurelius · Emperor of Rome · 121 AD</div>
+    <blockquote class="hquote rev d2">
+      "You have power over your mind, not outside events.<br>Realize this, and you will find strength."
+    </blockquote>
+    <div class="hauth rev d3">— Meditations, Book IV</div>
+    <div class="chips rev d4">
+      <span class="chip">Emperor of Rome</span>
+      <span class="chip">Stoic Philosopher</span>
+      <span class="chip">The Last Good Emperor</span>
+      <span class="chip">Philosopher-King</span>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span class="sh-text">Scroll</span>
+    <div class="sh-line"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATDIV: PHILOSOPHY ═══════════════════ -->
+<div class="catdiv"><div class="divtxt">PHILOSOPHY &nbsp; PHILOSOPHY &nbsp; PHILOSOPHY &nbsp;</div></div>
+
+<!-- ═══════════════════ SECTION 2: MA Full Quote ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕯</div>
+  <div class="anc-col anc-col-r">𝕯</div>
+  <div class="anc-orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(180,140,60,.06),transparent);top:10%;left:-10%;animation-delay:-3s"></div>
+  <div class="anc-orb" style="width:200px;height:200px;background:radial-gradient(circle,rgba(180,140,60,.05),transparent);bottom:10%;right:-5%;animation-delay:-7s"></div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Marcus Aurelius · Meditations</div>
+    <blockquote class="aquote rev d2 fire">
+      "The impediment to action advances action.<br>What stands in the way <em>becomes</em> the way."
+    </blockquote>
+    <div class="aauth rev d3">— Book V, 167 AD</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 3: KINETIC ═══════════════════ -->
+<section class="sec sec-kin" style="flex-direction:column;gap:0">
+  <div class="kword kword-gold rev">THE</div>
+  <div class="kword kword-gold rev d2">WAY</div>
+</section>
+
+<!-- ═══════════════════ SECTION 4: Stoic Trio ═══════════════════ -->
+<section class="sec">
+  <div class="trio">
+    <div class="tcard anc rev">
+      <p class="tq">"We suffer more in imagination than in reality. Most of what we fear never comes to pass, and what does come to pass — we find we are stronger than we thought."</p>
+      <div class="ta">— Seneca</div>
+    </div>
+    <div class="tcard anc rev d2">
+      <p class="tq">"It's not what happens to you, but how you react to it that matters. Between stimulus and response there is a space. In that space is your power."</p>
+      <div class="ta">— Epictetus</div>
+    </div>
+    <div class="tcard anc rev d3">
+      <p class="tq">"We are what we repeatedly do. Excellence, then, is not an act, but a habit — formed day by day, hour by hour."</p>
+      <div class="ta">— Aristotle</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 5: MA — Soul & Mind ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝖁</div>
+  <div class="anc-col anc-col-r">𝖁</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Marcus Aurelius</div>
+    <blockquote class="aquote rev d2">
+      "The soul becomes dyed with the color of its thoughts.<br><br>
+      <span style="font-size:.8em;opacity:.8">Dye it with excellence."</span>
+    </blockquote>
+    <div class="aauth rev d3">— Meditations, Book V</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 6: VIDEOS ═══════════════════ -->
+<section class="sec sec-vid" data-theme="cyber">
+  <div class="vid-grid rev">
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/UF8uR6Z6KLc?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Steve Jobs Stanford 2005"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Steve Jobs</div>
+        <div class="vid-title">Stay Hungry, Stay Foolish</div>
+        <div class="vid-desc">2005 Stanford Commencement. Three stories. One life philosophy that changed the world.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/dVDRiNDSklg?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Matthew McConaughey Oscar Speech"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Matthew McConaughey</div>
+        <div class="vid-title">Oscar Acceptance Speech 2014</div>
+        <div class="vid-desc">Three things I need each day: something to look up to, look forward to, and someone to chase.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/GEmuEWjHr5c?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Denzel Washington Speech"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Denzel Washington</div>
+        <div class="vid-title">Fall Forward</div>
+        <div class="vid-desc">Every failed experiment is one step closer to success. Without commitment, you'll never start.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATDIV: HARDWORK ═══════════════════ -->
+<div class="catdiv"><div class="divtxt">HARD WORK &nbsp; HARD WORK &nbsp; HARD WORK &nbsp;</div></div>
+
+<!-- ═══════════════════ SECTION 7: Kobe ═══════════════════ -->
+<section class="sec sec-cyber" data-theme="cyber">
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="clabel rev">Kobe Bryant · Black Mamba</div>
+    <blockquote class="cquote rev d2">
+      "I have nothing in common with<br><span class="hl">lazy people</span> who blame others<br>for their lack of success.<br><br>
+      <span style="font-size:.85em;opacity:.8">Great things come from hard work<br>and perseverance. <em>No excuses.</em></span>"
+    </blockquote>
+    <div class="cauth rev d3">— Kobe Bryant, 5× NBA Champion</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 8: KINETIC - NO EXCUSES ═══════════════════ -->
+<section class="sec sec-kin" style="flex-direction:column;gap:0">
+  <div class="kword rev">NO</div>
+  <div class="kword rev d2">EXCUSES</div>
+</section>
+
+<!-- ═══════════════════ SECTION 9: Modern Legend Trio ═══════════════════ -->
+<section class="sec">
+  <div class="trio">
+    <div class="tcard rev">
+      <p class="tq">"Some people want it to happen, some wish it would happen, others <strong>make it happen.</strong> Which one are you?"</p>
+      <div class="ta">— Michael Jordan</div>
+    </div>
+    <div class="tcard rev d2">
+      <p class="tq">"I am not afraid to die on a treadmill. You may be more talented, smarter — but if we get on the treadmill together, you are getting off first. Or I will die."</p>
+      <div class="ta">— Will Smith</div>
+    </div>
+    <div class="tcard rev d3">
+      <p class="tq">"The mind is the limit. As long as the mind can envision that you can do something — you can do it, if you believe 100 percent."</p>
+      <div class="ta">— Arnold Schwarzenegger</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 10: Seneca Full ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕾</div>
+  <div class="anc-col anc-col-r">𝕾</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Lucius Annaeus Seneca · 4 BC – 65 AD</div>
+    <blockquote class="aquote rev d2 fire">
+      "It is not because things are difficult<br>that we dare not venture.<br>
+      <em>It is because we dare not venture<br>that they are difficult.</em>"
+    </blockquote>
+    <div class="aauth rev d3">— Letters to Lucilius</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 11: VIDEOS ═══════════════════ -->
+<section class="sec sec-vid" data-theme="cyber">
+  <div class="vid-grid rev">
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/TLsqdMeiA6s?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Conor McGregor Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Conor McGregor</div>
+        <div class="vid-title">We're Here to Take Over</div>
+        <div class="vid-desc">I don't just dream — I execute. Visualization, work, belief. The formula of a champion.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/5Hd7BKZQ8lQ?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Tom Brady Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Tom Brady</div>
+        <div class="vid-title">The Drive to Be the Best</div>
+        <div class="vid-desc">7 Super Bowl rings. Still hungry. What separates TB12 isn't talent — it's relentless preparation.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/qWXike3nzao?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="David Goggins Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">David Goggins</div>
+        <div class="vid-title">Can't Hurt Me</div>
+        <div class="vid-desc">40% rule. Callusing the mind. The man who ran 100 miles on broken feet. No limits exist.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATDIV: DISCIPLINE ═══════════════════ -->
+<div class="catdiv"><div class="divtxt">DISCIPLINE &nbsp; DISCIPLINE &nbsp; DISCIPLINE &nbsp;</div></div>
+
+<!-- ═══════════════════ SECTION 12: Epictetus ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕰</div>
+  <div class="anc-col anc-col-r">𝕰</div>
+  <div class="split">
+    <div class="split-q">
+      <div class="alabel rev">Epictetus · Born a Slave, Died a Legend</div>
+      <blockquote class="aquote rev d2" style="text-align:left;max-width:100%">
+        "No man is free who is not<br>master of himself."
+      </blockquote>
+      <div class="aauth rev d3" style="text-align:left">— Enchiridion</div>
+      <div style="margin-top:40px" class="rev d4">
+        <blockquote class="aquote" style="font-size:clamp(16px,2.5vw,28px);text-align:left;max-width:100%">
+          "First say to yourself what you would be;<br>and then do what you have to do."
+        </blockquote>
+        <div class="aauth" style="text-align:left;margin-top:12px">— Discourses, Book III</div>
+      </div>
+    </div>
+    <div class="split-vis">
+      <div class="ancient-svg-wrap">
+        <svg viewBox="0 0 200 280" width="100%" height="100%" style="filter:drop-shadow(0 0 30px rgba(212,175,55,.15))">
+          <defs>
+            <radialGradient id="mg" cx="50%" cy="40%" r="50%">
+              <stop offset="0%" stop-color="rgba(212,175,55,.25)"/>
+              <stop offset="100%" stop-color="rgba(212,175,55,0)"/>
+            </radialGradient>
+          </defs>
+          <!-- Column -->
+          <rect x="70" y="20" width="60" height="8" rx="2" fill="rgba(212,175,55,.2)"/>
+          <rect x="75" y="28" width="50" height="6" rx="1" fill="rgba(212,175,55,.15)"/>
+          <!-- Shaft flutes -->
+          <rect x="78" y="34" width="6" height="180" rx="3" fill="rgba(212,175,55,.12)"/>
+          <rect x="86" y="34" width="6" height="180" rx="3" fill="rgba(212,175,55,.1)"/>
+          <rect x="94" y="34" width="6" height="180" rx="3" fill="rgba(212,175,55,.12)"/>
+          <rect x="102" y="34" width="6" height="180" rx="3" fill="rgba(212,175,55,.1)"/>
+          <rect x="110" y="34" width="6" height="180" rx="3" fill="rgba(212,175,55,.12)"/>
+          <!-- Base -->
+          <rect x="73" y="214" width="54" height="7" rx="2" fill="rgba(212,175,55,.15)"/>
+          <rect x="68" y="221" width="64" height="9" rx="2" fill="rgba(212,175,55,.2)"/>
+          <!-- Laurel wreath circle -->
+          <circle cx="100" cy="130" r="55" fill="none" stroke="rgba(212,175,55,.06)" stroke-width="1"/>
+          <circle cx="100" cy="130" r="50" fill="url(#mg)"/>
+          <!-- Laurel dots -->
+          <g fill="rgba(212,175,55,.2)">
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(0,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(30,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(60,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(90,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(120,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(150,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(180,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(210,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(240,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(270,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(300,100,130)"/>
+            <ellipse cx="100" cy="76" rx="4" ry="7" transform="rotate(330,100,130)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 13: Goggins ═══════════════════ -->
+<section class="sec sec-cyber" data-theme="cyber">
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="clabel rev">David Goggins · Navy SEAL · Ultra-Endurance Athlete</div>
+    <blockquote class="cquote rev d2">
+      "We live in a society where<br>mediocrity is <span class="hlb">celebrated</span><br>and <span class="hl">excellence</span> is expected.<br><br>
+      <span style="font-size:.8em;opacity:.75">Most people quit at 40%.<br>You haven't even started."</span>
+    </blockquote>
+    <div class="cauth rev d3">— David Goggins, Can't Hurt Me</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 14: KINETIC - UNCOMMON ═══════════════════ -->
+<section class="sec sec-kin" style="flex-direction:column;gap:0">
+  <div class="kword rev" style="font-size:clamp(40px,12vw,140px)">UN</div>
+  <div class="kword rev d2" style="font-size:clamp(40px,12vw,140px)">COMMON</div>
+  <div class="kword rev d3" style="font-size:clamp(40px,12vw,140px)">BREED</div>
+</section>
+
+<!-- ═══════════════════ SECTION 15: Philosophy Quartet ═══════════════════ -->
+<section class="sec">
+  <div class="trio" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+    <div class="tcard anc rev">
+      <p class="tq">"The secret of change is to focus all of your energy not on fighting the old, but on building the new."</p>
+      <div class="ta">— Socrates</div>
+    </div>
+    <div class="tcard anc rev d1">
+      <p class="tq">"An unexamined life is not worth living. Know thyself — and then go further than you ever imagined."</p>
+      <div class="ta">— Socrates · Apology</div>
+    </div>
+    <div class="tcard anc rev d2">
+      <p class="tq">"Courage is knowing what not to fear. The brave man is not he who feels no fear, but he who conquers that fear."</p>
+      <div class="ta">— Plato · The Republic</div>
+    </div>
+    <div class="tcard anc rev d3">
+      <p class="tq">"No man ever steps in the same river twice, for it's not the same river — and he's not the same man."</p>
+      <div class="ta">— Heraclitus</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 16: VIDEOS ═══════════════════ -->
+<section class="sec sec-vid" data-theme="cyber">
+  <div class="vid-grid rev">
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/BxY_eJLBflk?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Kobe Bryant Mamba Mentality"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Kobe Bryant</div>
+        <div class="vid-title">Mamba Mentality</div>
+        <div class="vid-desc">The mindset that drove 20 seasons, 5 titles, and a legacy that lives forever. Details matter.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/tjgFAHAZEWs?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Arnold Schwarzenegger 6 Rules"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Arnold Schwarzenegger</div>
+        <div class="vid-title">6 Rules of Success</div>
+        <div class="vid-desc">From poverty in Austria to governor of California. Vision. Trust. Break rules. Work day and night.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/nrk6h3lT01g?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Conor McGregor Visualization"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Michael Jordan</div>
+        <div class="vid-title">Work Ethic &amp; Last Dance</div>
+        <div class="vid-desc">They said I was selfish. I just refused to lose. The price of greatness is everything you have.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATDIV: WEALTH ═══════════════════ -->
+<div class="catdiv"><div class="divtxt">WEALTH &nbsp; WEALTH &nbsp; WEALTH &nbsp; WEALTH &nbsp;</div></div>
+
+<!-- ═══════════════════ SECTION 17: Naval / Wealth ═══════════════════ -->
+<section class="sec sec-cyber" data-theme="cyber">
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="clabel rev">Naval Ravikant · Philosopher · Entrepreneur</div>
+    <blockquote class="cquote rev d2">
+      "Seek <span class="hl">wealth</span>, not money or status.<br>Wealth is having assets that<br><span class="hl">earn while you sleep</span>.<br><br>
+      <span style="font-size:.8em;opacity:.75">Money is how we transfer time and wealth.<br>Status is your rank in the social hierarchy."</span>
+    </blockquote>
+    <div class="cauth rev d3">— Naval Ravikant, How to Get Rich</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 18: Business Trio ═══════════════════ -->
+<section class="sec">
+  <div class="trio">
+    <div class="tcard rev">
+      <p class="tq">"The difference between successful people and really successful people is that really successful people say <strong>no</strong> to almost everything."</p>
+      <div class="ta">— Warren Buffett</div>
+    </div>
+    <div class="tcard rev d2">
+      <p class="tq">"I'm not a businessman, I'm a <strong>business, man.</strong> Let me handle my business, damn."</p>
+      <div class="ta">— Jay-Z</div>
+    </div>
+    <div class="tcard rev d3">
+      <p class="tq">"Your work is going to fill a large part of your life. The only way to be truly satisfied is to do what you believe is <strong>great work</strong>."</p>
+      <div class="ta">— Steve Jobs</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 19: MA — Morning ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕸</div>
+  <div class="anc-col anc-col-r">𝕸</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Marcus Aurelius · Daily Practice</div>
+    <blockquote class="aquote rev d2">
+      "When you wake up in the morning,<br>tell yourself: the people I deal with today<br>will be meddling, ungrateful, arrogant.<br><br>
+      <span style="font-size:.85em;opacity:.85">But none of them can hurt me. No one can<br>implicate me in ugliness — nor can I feel<br>angry at my brother or hate him.<br><br>
+      <strong>For we are made for cooperation.</strong>"</span>
+    </blockquote>
+    <div class="aauth rev d3">— Meditations, Book II</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 20: KINETIC - RISE ═══════════════════ -->
+<section class="sec sec-kin" style="flex-direction:column;gap:0">
+  <div class="kword kword-gold rev">RISE</div>
+  <div class="kword rev d2">GRIND</div>
+  <div class="kword kword-gold rev d3">REPEAT</div>
+</section>
+
+<!-- ═══════════════════ SECTION 21: VIDEOS ═══════════════════ -->
+<section class="sec sec-vid" data-theme="cyber">
+  <div class="vid-grid rev">
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/MmFTzd8-J6Q?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Elon Musk Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Elon Musk</div>
+        <div class="vid-title">Work Like Hell</div>
+        <div class="vid-desc">If other people are putting in 40-hour work weeks and you're putting in 100-hour work weeks — you will achieve in 4 months what takes them a year.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/YRKmKymA0-E?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Gary Vee Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Gary Vaynerchuk</div>
+        <div class="vid-title">Stop Living For Tomorrow</div>
+        <div class="vid-desc">Legacy is greater than currency. Self-awareness + effort = everything. Stop making excuses.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/78IfbMnqiSk?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Will Smith Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Will Smith</div>
+        <div class="vid-title">The Separation of Talent</div>
+        <div class="vid-desc">Talent is natural. Skill is developed. The only thing that separates you is work — relentless, unglamorous work.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATDIV: PERSEVERANCE ═══════════════════ -->
+<div class="catdiv"><div class="divtxt">PERSEVERANCE &nbsp; PERSEVERANCE &nbsp; PERSEVERANCE &nbsp;</div></div>
+
+<!-- ═══════════════════ SECTION 22: Heraclitus / Change ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕳</div>
+  <div class="anc-col anc-col-r">𝕳</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Heraclitus of Ephesus · 535–475 BC</div>
+    <blockquote class="aquote rev d2 fire">
+      "Out of every one hundred men,<br>ten shouldn't even be there,<br>eighty are just targets,<br>nine are the real fighters.<br><br>
+      <em>But the one — the one is a warrior.<br>And he will bring the others back."</em>
+    </blockquote>
+    <div class="aauth rev d3">— Heraclitus</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 23: Perseverance Trio ═══════════════════ -->
+<section class="sec">
+  <div class="trio">
+    <div class="tcard rev">
+      <p class="tq">"Pain is temporary. It may last a minute, an hour, a day — but eventually it will subside. If I quit, however, it lasts forever."</p>
+      <div class="ta">— Lance Armstrong</div>
+    </div>
+    <div class="tcard rev d2">
+      <p class="tq">"If you're going through hell, <strong>keep going.</strong> You will come out the other side — changed, forged, unbreakable."</p>
+      <div class="ta">— Winston Churchill</div>
+    </div>
+    <div class="tcard rev d3">
+      <p class="tq">"Hard work beats talent when talent doesn't work hard. But hard work + talent? That's unstoppable."</p>
+      <div class="ta">— Tim Notke</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 24: MA — Cliff ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕻</div>
+  <div class="anc-col anc-col-r">𝕻</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Marcus Aurelius</div>
+    <blockquote class="aquote rev d2">
+      "Be like the cliff against which<br>the waves continually break;<br>but it stands firm and tames<br>the fury of the water around it."
+    </blockquote>
+    <div class="aauth rev d3">— Meditations, Book IV</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 25: KINETIC - IRON SHARPENS ═══════════════════ -->
+<section class="sec sec-kin" style="flex-direction:column;gap:0">
+  <div class="kword rev" style="font-size:clamp(34px,9vw,110px)">IRON</div>
+  <div class="kword kword-gold rev d2" style="font-size:clamp(34px,9vw,110px)">SHARPENS</div>
+  <div class="kword rev d3" style="font-size:clamp(34px,9vw,110px)">IRON</div>
+</section>
+
+<!-- ═══════════════════ SECTION 26: VIDEOS ═══════════════════ -->
+<section class="sec sec-vid" data-theme="cyber">
+  <div class="vid-grid rev">
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/jE_P80SnKEE?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Tom Brady Interview"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Tom Brady</div>
+        <div class="vid-title">Why Am I Not Satisfied?</div>
+        <div class="vid-desc">After winning Super Bowl XXXVII, Tom Brady told 60 Minutes: "There has to be more than this." That hunger is the answer.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/lsSC2vx7zFQ?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Conor McGregor Destiny"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Conor McGregor</div>
+        <div class="vid-title">I Am the Law of Attraction</div>
+        <div class="vid-desc">I visualized this. I spoke it. I worked for it. Now I stand here. Your thoughts are your destiny.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/D1ZYhVpdXbQ?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Jim Carrey Commencement"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Jim Carrey</div>
+        <div class="vid-title">Fear vs. Love</div>
+        <div class="vid-desc">My father could have been a great comedian but he didn't believe that was possible for a person like him. Don't let fear make your choices.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATDIV: CONQUEST ═══════════════════ -->
+<div class="catdiv"><div class="divtxt">CONQUEST &nbsp; CONQUEST &nbsp; CONQUEST &nbsp;</div></div>
+
+<!-- ═══════════════════ SECTION 27: MA — Present ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕬</div>
+  <div class="anc-col anc-col-r">𝕬</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Marcus Aurelius · Meditations</div>
+    <blockquote class="aquote rev d2">
+      "Confine yourself to the present.<br><br>
+      <span style="font-size:.85em">You have power over your mind,<br>not outside events.<br><br>
+      Look within. Within is the fountain of good,<br>and it will ever bubble up,<br><em>if thou wilt ever dig.</em>"</span>
+    </blockquote>
+    <div class="aauth rev d3">— Meditations, Book VII</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 28: More Modern Greats ═══════════════════ -->
+<section class="sec">
+  <div class="trio" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+    <div class="tcard rev">
+      <p class="tq">"When something is important enough, you do it even if the odds are not in your favor."</p>
+      <div class="ta">— Elon Musk</div>
+    </div>
+    <div class="tcard rev d1">
+      <p class="tq">"The cave you fear to enter holds the treasure you seek. The hero's journey begins the moment you step inside."</p>
+      <div class="ta">— Joseph Campbell</div>
+    </div>
+    <div class="tcard rev d2">
+      <p class="tq">"Dreams don't work unless you do. And when you do the work, dreams have no choice but to surrender to you."</p>
+      <div class="ta">— John C. Maxwell</div>
+    </div>
+    <div class="tcard rev d3">
+      <p class="tq">"The harder the battle, the sweeter the victory. Don't pray for easy lives — pray to be stronger men."</p>
+      <div class="ta">— Les Brown</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 29: Seneca — Time ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕾</div>
+  <div class="anc-col anc-col-r">𝕾</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Seneca · On the Shortness of Life</div>
+    <blockquote class="aquote rev d2 fire">
+      "It is not that we have a short time to live,<br>but that we waste a great deal of it.<br><br>
+      <em>Life is long enough, and a sufficiently<br>generous amount has been given to us<br>for the highest achievements<br>if it were all well invested."</em>
+    </blockquote>
+    <div class="aauth rev d3">— De Brevitate Vitae, 49 AD</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 30: KINETIC - GET TO WORK ═══════════════════ -->
+<section class="sec sec-kin" style="flex-direction:column;gap:0">
+  <div class="kword rev" style="font-size:clamp(36px,11vw,130px)">GET</div>
+  <div class="kword kword-gold rev d2" style="font-size:clamp(36px,11vw,130px)">TO</div>
+  <div class="kword rev d3" style="font-size:clamp(36px,11vw,130px)">WORK</div>
+</section>
+
+<!-- ═══════════════════ SECTION 31: Aristotle on Excellence ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕬</div>
+  <div class="anc-col anc-col-r">𝕬</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Aristotle · 384–322 BC</div>
+    <blockquote class="aquote rev d2">
+      "Knowing yourself is the<br>beginning of all wisdom.<br><br>
+      <span style="font-size:.85em">Pleasure in the job<br>puts perfection in the work.<br><br>
+      <em>Excellence is never an accident.<br>It is always the result of high intention,<br>sincere effort, and intelligent execution."</em></span>
+    </blockquote>
+    <div class="aauth rev d3">— Nicomachean Ethics</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 32: Final Video Row ═══════════════════ -->
+<section class="sec sec-vid" data-theme="cyber">
+  <div class="vid-grid rev">
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/IOvCCT4EBZE?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Nipsey Hussle"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Nipsey Hussle</div>
+        <div class="vid-title">The Marathon Continues</div>
+        <div class="vid-desc">Invest in yourself. Bet on yourself. The most risky thing you can do is be average in a world that rewards excellence.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/QoB_Yb9bDas?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Les Brown Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Les Brown</div>
+        <div class="vid-title">It's Possible</div>
+        <div class="vid-desc">You don't have to be great to get started, but you have to get started to be great. The graveyard is the richest place on earth.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/1BmCYGSHGkk?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Eric Thomas Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Eric Thomas</div>
+        <div class="vid-title">When You Want to Succeed</div>
+        <div class="vid-desc">When you want to succeed as bad as you want to breathe — then you will be successful. TGIM.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CATDIV: LEGACY ═══════════════════ -->
+<div class="catdiv"><div class="divtxt">LEGACY &nbsp; LEGACY &nbsp; LEGACY &nbsp; LEGACY &nbsp;</div></div>
+
+<!-- ═══════════════════ SECTION 33: MA — Death & Legacy ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝖃</div>
+  <div class="anc-col anc-col-r">𝖃</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Marcus Aurelius · On Death & Meaning</div>
+    <blockquote class="aquote rev d2 fire">
+      "It is not death that a man should fear,<br>but he should fear<br><em>never beginning to live.</em><br><br>
+      <span style="font-size:.85em">When you arise in the morning,<br>think of what a precious privilege it is<br>to be alive — to breathe, to think,<br>to enjoy, <strong>to love.</strong>"</span>
+    </blockquote>
+    <div class="aauth rev d3">— Meditations, Book XII</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 34: Legacy Trio ═══════════════════ -->
+<section class="sec">
+  <div class="trio">
+    <div class="tcard anc rev">
+      <p class="tq">"The price good men pay for indifference to public affairs is to be ruled by evil men. Greatness comes with responsibility."</p>
+      <div class="ta">— Plato · The Republic</div>
+    </div>
+    <div class="tcard rev d2">
+      <p class="tq">"Goals on the road to achievement cannot be achieved without discipline and consistency. Dreams without deadlines are just wishes."</p>
+      <div class="ta">— Denzel Washington</div>
+    </div>
+    <div class="tcard rev d3">
+      <p class="tq">"The two most important days in your life are the day you are born, and the day you find out <strong>why.</strong>"</p>
+      <div class="ta">— Mark Twain</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 35: MA — Last ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕮</div>
+  <div class="anc-col anc-col-r">𝕮</div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Marcus Aurelius · Final Words</div>
+    <blockquote class="aquote rev d2 fire" style="font-size:clamp(24px,4.2vw,56px)">
+      "Never esteem anything as of<br>advantage to you that will make you<br>break your word or lose your<br><em>self-respect.</em>"
+    </blockquote>
+    <div class="aauth rev d3">— Meditations, Book III</div>
+    <div style="margin-top:40px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center" class="rev d4">
+      <span class="chip" style="color:var(--gold);text-shadow:0 0 8px var(--gold-d);border-color:rgba(212,175,55,.2)">161–180 AD</span>
+      <span class="chip" style="color:var(--gold);text-shadow:0 0 8px var(--gold-d);border-color:rgba(212,175,55,.2)">Meditations</span>
+      <span class="chip" style="color:var(--gold);text-shadow:0 0 8px var(--gold-d);border-color:rgba(212,175,55,.2)">Stoic Philosophy</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 36: Modern Fire Quotes ═══════════════════ -->
+<section class="sec">
+  <div class="trio" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+    <div class="tcard rev">
+      <p class="tq">"You miss 100% of the shots you don't take. The secret of life is acting before you're ready."</p>
+      <div class="ta">— Wayne Gretzky</div>
+    </div>
+    <div class="tcard rev d1">
+      <p class="tq">"Talent is cheaper than table salt. What separates the talented from the successful is a lot of <strong>hard work.</strong>"</p>
+      <div class="ta">— Stephen King</div>
+    </div>
+    <div class="tcard rev d2">
+      <p class="tq">"Money is only a tool. It will take you wherever you wish — but it will not replace you as the driver."</p>
+      <div class="ta">— Ayn Rand · Atlas Shrugged</div>
+    </div>
+    <div class="tcard rev d3">
+      <p class="tq">"Wealth consists not in having great possessions, but in having few wants. Master yourself first."</p>
+      <div class="ta">— Epictetus</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 37: VIDEOS — Final ═══════════════════ -->
+<section class="sec sec-vid" data-theme="cyber">
+  <div class="vid-grid rev">
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/j6setTZYpMU?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Walter Payton Motivational"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Rocky Balboa</div>
+        <div class="vid-title">It Ain't About Hard You Hit</div>
+        <div class="vid-desc">It ain't about how hard you hit. It's about how hard you can get hit and keep moving forward. That's how winning is done.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/b7BI0PBxfFM?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="CT Fletcher Motivation"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">CT Fletcher</div>
+        <div class="vid-title">It's Still Your Motherf***ing Set</div>
+        <div class="vid-desc">7× World Strict Curl Champion. Heart stopped. Came back. Nothing and nobody can stop you when you decide.</div>
+      </div>
+    </div>
+    <div class="vid-card">
+      <iframe class="vid-embed" src="https://www.youtube.com/embed/D0UnqGm_miA?rel=0&modestbranding=1" allowfullscreen loading="lazy" title="Matthew McConaughey speech"></iframe>
+      <div class="vid-info">
+        <div class="vid-person">Matthew McConaughey</div>
+        <div class="vid-title">Life's Barely Long Enough</div>
+        <div class="vid-desc">The hero's journey. Permission to be great. "Life's barely long enough to get good at one thing — so be careful what you get good at."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 38: Penultimate Stoic ═══════════════════ -->
+<section class="sec sec-anc" data-theme="ancient">
+  <div class="anc-col anc-col-l">𝕮</div>
+  <div class="anc-col anc-col-r">𝕮</div>
+  <div class="anc-orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(212,175,55,.04),transparent);top:50%;left:50%;transform:translate(-50%,-50%);animation:float-orb 15s infinite ease-in-out"></div>
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="alabel rev">Stoic Principles · The Foundation</div>
+    <blockquote class="aquote rev d2" style="font-size:clamp(20px,3.2vw,44px)">
+      "You have survived 100% of your worst days.<br><br>
+      <em>The obstacle is the way.<br>The enemy is within.<br>The battlefield is the mind.<br><br>
+      And the mind — the mind is<br><strong>unconquerable.</strong>"</em>
+    </blockquote>
+    <div class="aauth rev d3">— Synthesis of Marcus Aurelius · Ryan Holiday</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 39: Final Cyber Blast ═══════════════════ -->
+<section class="sec sec-cyber" data-theme="cyber">
+  <div style="display:flex;flex-direction:column;align-items:center">
+    <div class="clabel rev glow">THE FINAL LAW</div>
+    <blockquote class="cquote rev d2" style="font-size:clamp(22px,4vw,52px)">
+      "You are not behind.<br>You are not too late.<br>You are exactly where<br><span class="hl">you decided to be</span>.<br><br>
+      <span style="font-size:.75em;opacity:.7">Now decide differently."</span>
+    </blockquote>
+    <div class="cauth rev d3">— The Mirror</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ SECTION 40: CTA / FINALE ═══════════════════ -->
+<section class="cta-section" data-theme="cyber">
+  <div class="cta-word rev">YOUR</div>
+  <div class="cta-word rev d1" style="background:linear-gradient(135deg,var(--gold),rgba(212,175,55,.1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 60px var(--gold-d))">STORY</div>
+  <div class="cta-word rev d2">ISN'T</div>
+  <div class="cta-word rev d3" style="background:linear-gradient(135deg,var(--green),rgba(57,255,20,.1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 60px var(--green-d))">OVER</div>
+  <div class="cta-sub rev d4">Now close this tab and go write the next chapter.</div>
+</section>
+
+</div><!-- #app -->
+
+<script>
+/* ═══════════ 1. WebGL KINETIC WAVE SHADER ═══════════ */
+(function(){
+  const canvas = document.getElementById('wgl');
+  function syncSize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  syncSize();
+  window.addEventListener('resize', syncSize);
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if(!gl) return;
+
+  const vs = `attribute vec2 a_pos;varying vec2 v_uv;void main(){v_uv=a_pos*.5+.5;gl_Position=vec4(a_pos,0.,1.);}`;
+  const fs = `
+precision highp float;
+varying vec2 v_uv;
+uniform float u_t;
+uniform vec2 u_res;
+
+float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);vec2 u=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),u.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x),u.y);}
+
+void main(){
+  vec2 uv=v_uv;
+  vec2 p=(uv-.5)*2.;
+  p.x*=u_res.x/u_res.y;
+  float t=u_t*.3;
+  vec3 col=vec3(.015,.016,.022);
+
+  // Kinetic waves
+  for(float i=1.;i<5.;i++){
+    p.x+=.25/i*sin(i*2.8*p.y+t+noise(vec2(i))*8.);
+    p.y+=.25/i*cos(i*2.8*p.x+t+noise(vec2(i+1.))*8.);
+  }
+
+  float d=length(p);
+  float glow=.04/max(d,.001);
+
+  // Green accent
+  vec3 green=vec3(.22,1.,.08);
+  col+=green*glow*(.4+.4*sin(t*1.3));
+
+  // Blue accent
+  vec3 blue=vec3(.16,.56,1.);
+  col+=blue*(glow*.3)*(.4+.4*cos(t*1.1+1.5));
+
+  // Grain
+  col+=noise(uv+t*.05)*.012;
+  col=clamp(col,0.,1.);
+  gl_FragColor=vec4(col,1.);
+}`;
+
+  function mkShader(type,src){
+    const s=gl.createShader(type);
+    gl.shaderSource(s,src);gl.compileShader(s);return s;
+  }
+  const prog=gl.createProgram();
+  gl.attachShader(prog,mkShader(gl.VERTEX_SHADER,vs));
+  gl.attachShader(prog,mkShader(gl.FRAGMENT_SHADER,fs));
+  gl.linkProgram(prog);gl.useProgram(prog);
+
+  const buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const pos=gl.getAttribLocation(prog,'a_pos');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+
+  const uT=gl.getUniformLocation(prog,'u_t');
+  const uR=gl.getUniformLocation(prog,'u_res');
+
+  function render(t){
+    requestAnimationFrame(render);
+    syncSize();
+    gl.viewport(0,0,canvas.width,canvas.height);
+    gl.uniform1f(uT,t*.001);
+    gl.uniform2f(uR,canvas.width,canvas.height);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  }
+  requestAnimationFrame(render);
+})();
+
+/* ═══════════ 2. THREE.JS HERO + FLOATING PARTICLES ═══════════ */
+(function(){
+  if(typeof THREE==='undefined') return;
+
+  // ── HERO 3D ICOSAHEDRON ──
+  const heroEl=document.getElementById('hero3d');
+  const heroScene=new THREE.Scene();
+  const heroCamera=new THREE.PerspectiveCamera(65,heroEl.clientWidth/heroEl.clientHeight,.1,100);
+  heroCamera.position.z=5;
+  const heroRenderer=new THREE.WebGLRenderer({alpha:true,antialias:true});
+  heroRenderer.setSize(heroEl.clientWidth||window.innerWidth,heroEl.clientHeight||window.innerHeight);
+  heroRenderer.setPixelRatio(window.devicePixelRatio);
+  heroRenderer.setClearColor(0x000000,0);
+  heroEl.appendChild(heroRenderer.domElement);
+  Object.assign(heroRenderer.domElement.style,{position:'absolute',inset:'0',width:'100%',height:'100%'});
+
+  const aLight=new THREE.AmbientLight(0xffffff,.4);
+  heroScene.add(aLight);
+  const pLight=new THREE.PointLight(0x39FF14,3,15);
+  pLight.position.set(3,3,3);
+  heroScene.add(pLight);
+  const pLight2=new THREE.PointLight(0x448fff,2,12);
+  pLight2.position.set(-3,-2,2);
+  heroScene.add(pLight2);
+
+  // Core
+  const core=new THREE.Mesh(
+    new THREE.IcosahedronGeometry(1.6,4),
+    new THREE.MeshPhongMaterial({color:0x39FF14,wireframe:true,transparent:true,opacity:.75,emissive:0x0a1f00})
+  );
+  heroScene.add(core);
+
+  // Shell
+  const shell=new THREE.Mesh(
+    new THREE.IcosahedronGeometry(1.9,1),
+    new THREE.MeshBasicMaterial({color:0x448fff,wireframe:true,transparent:true,opacity:.18})
+  );
+  heroScene.add(shell);
+
+  // Outer ring
+  const ring=new THREE.Mesh(
+    new THREE.TorusGeometry(2.6,.015,6,80),
+    new THREE.MeshBasicMaterial({color:0x39FF14,transparent:true,opacity:.25})
+  );
+  ring.rotation.x=Math.PI/2.2;
+  heroScene.add(ring);
+
+  const ring2=new THREE.Mesh(
+    new THREE.TorusGeometry(3,.01,6,80),
+    new THREE.MeshBasicMaterial({color:0x448fff,transparent:true,opacity:.12})
+  );
+  ring2.rotation.x=Math.PI/3;ring2.rotation.z=Math.PI/4;
+  heroScene.add(ring2);
+
+  // Floating gold dots
+  const dotGeo=new THREE.BufferGeometry();
+  const N=120;const pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    const theta=Math.random()*Math.PI*2;
+    const phi=Math.acos(2*Math.random()-1);
+    const r=2.5+Math.random()*.8;
+    pos[i*3]=r*Math.sin(phi)*Math.cos(theta);
+    pos[i*3+1]=r*Math.sin(phi)*Math.sin(theta);
+    pos[i*3+2]=r*Math.cos(phi);
+  }
+  dotGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const dots=new THREE.Points(dotGeo,new THREE.PointsMaterial({color:0xD4AF37,size:.04,transparent:true,opacity:.7}));
+  heroScene.add(dots);
+
+  let mouseX=0,mouseY=0;
+  document.addEventListener('mousemove',e=>{
+    mouseX=(e.clientX/window.innerWidth-.5)*.4;
+    mouseY=(e.clientY/window.innerHeight-.5)*.4;
+  });
+
+  window.addEventListener('resize',()=>{
+    heroCamera.aspect=heroEl.clientWidth/heroEl.clientHeight;
+    heroCamera.updateProjectionMatrix();
+    heroRenderer.setSize(heroEl.clientWidth,heroEl.clientHeight);
+  });
+
+  // ── GLOBAL PARTICLES ──
+  const tjEl=document.getElementById('tj');
+  const tjScene=new THREE.Scene();
+  const tjCam=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,.1,200);
+  tjCam.position.z=8;
+  const tjRenderer=new THREE.WebGLRenderer({alpha:true,antialias:false});
+  tjRenderer.setSize(window.innerWidth,window.innerHeight);
+  tjRenderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+  tjRenderer.setClearColor(0x000000,0);
+  tjEl.appendChild(tjRenderer.domElement);
+  Object.assign(tjRenderer.domElement.style,{position:'absolute',inset:'0',width:'100%',height:'100%'});
+
+  // Particle cloud
+  const pGeo=new THREE.BufferGeometry();
+  const P=800;const pPos=new Float32Array(P*3);
+  for(let i=0;i<P;i++){
+    pPos[i*3]=(Math.random()-.5)*40;
+    pPos[i*3+1]=(Math.random()-.5)*60;
+    pPos[i*3+2]=(Math.random()-.5)*20;
+  }
+  pGeo.setAttribute('position',new THREE.BufferAttribute(pPos,3));
+  // Mix of green and gold particles
+  const particles=new THREE.Points(pGeo,new THREE.PointsMaterial({color:0x39FF14,size:.06,transparent:true,opacity:.35}));
+  tjScene.add(particles);
+  const pGeo2=pGeo.clone();
+  const particles2=new THREE.Points(pGeo2,new THREE.PointsMaterial({color:0xD4AF37,size:.05,transparent:true,opacity:.2}));
+  tjScene.add(particles2);
+
+  window.addEventListener('resize',()=>{
+    tjCam.aspect=window.innerWidth/window.innerHeight;
+    tjCam.updateProjectionMatrix();
+    tjRenderer.setSize(window.innerWidth,window.innerHeight);
+  });
+
+  // ── ANIMATE ──
+  let scrollY=0;
+  window.addEventListener('scroll',()=>scrollY=window.scrollY);
+
+  function animate(t){
+    requestAnimationFrame(animate);
+    const time=t*.001;
+
+    // Hero
+    core.rotation.y=time*.4;core.rotation.z=time*.25;
+    core.scale.setScalar(1+Math.sin(time*1.8)*.04);
+    shell.rotation.y=-time*.18;shell.rotation.x=time*.12;
+    ring.rotation.z=time*.22;ring2.rotation.y=time*.15;
+    dots.rotation.y=time*.08;dots.rotation.x=time*.05;
+    heroCamera.position.x+=(mouseX-heroCamera.position.x)*.04;
+    heroCamera.position.y+=(-mouseY-heroCamera.position.y)*.04;
+    heroRenderer.render(heroScene,heroCamera);
+
+    // Global particles
+    particles.rotation.y=time*.03+scrollY*.0001;
+    particles.rotation.x=time*.015;
+    particles2.rotation.y=-time*.025-scrollY*.00008;
+    tjRenderer.render(tjScene,tjCam);
+  }
+  requestAnimationFrame(animate);
+})();
+
+/* ═══════════ 3. SCROLL REVEAL ═══════════ */
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')});
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rev').forEach(el=>io.observe(el));
+})();
+
+/* ═══════════ 4. COLOR TEMPERATURE ═══════════ */
+(function(){
+  const overlay=document.getElementById('col-overlay');
+  const THEMES={
+    ancient:'radial-gradient(ellipse at 50% 50%,rgba(120,80,20,.12) 0%,transparent 70%)',
+    cyber:'radial-gradient(ellipse at 50% 50%,rgba(20,40,20,.08) 0%,transparent 70%)',
+    default:'transparent'
+  };
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const theme=e.target.dataset.theme||'default';
+        overlay.style.background=THEMES[theme]||THEMES.default;
+      }
+    });
+  },{threshold:.4});
+  document.querySelectorAll('[data-theme]').forEach(el=>io.observe(el));
+})();
+
+/* ═══════════ 5. PARALLAX COLUMNS ═══════════ */
+(function(){
+  const cols=document.querySelectorAll('.anc-col');
+  window.addEventListener('scroll',()=>{
+    const sy=window.scrollY;
+    cols.forEach(c=>{
+      const rect=c.parentElement.getBoundingClientRect();
+      const progress=(window.innerHeight-rect.top)/window.innerHeight;
+      c.style.transform=c.classList.contains('anc-col-l')
+        ?`translateY(calc(-50% + ${progress*20}px)) rotate(-1deg)`
+        :`translateY(calc(-50% + ${progress*20}px)) scaleX(-1) rotate(-1deg)`;
+    });
+  },{passive:true});
+})();
+</script>
+</body>
+</html>
